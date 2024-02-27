@@ -1,21 +1,28 @@
 package com.example.lemonade
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -27,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,33 +51,49 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LemonadeApp() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        LemonadeBanner()
-        LemonadeProducer(
-            modifier = Modifier
-                .wrapContentSize(Alignment.Center)
-        )
-    }
+     Scaffold (
+         topBar = {
+             CenterAlignedTopAppBar(
+                 colors = topAppBarColors(
+                    containerColor = Color(0xFFFDE86F),
+                 ),
+                 title = { Text(text = "Lemonade", fontWeight = FontWeight.Bold)}
+             )
+         }
+     ){ LemonadeProducer() }
 
 }
 
 @Composable
 fun LemonadeBanner(modifier: Modifier = Modifier) {
-    Text(text = "Lemonade")
+    Text(
+        text = "Lemonade",
+        fontWeight = FontWeight.Bold,
+        modifier = modifier
+            .height(60.dp)
+            .fillMaxWidth()
+            .background(color = Color.Yellow)
+
+    )
 }
 
 @Composable
 fun LemonadeProducer(modifier: Modifier = Modifier) {
-    var pageToLoad by remember { mutableIntStateOf(1) }
-    var toPress by remember { mutableIntStateOf(4) }
-    when (pageToLoad) {
-        1 -> LemonadePage(
+    Surface(
+        color = MaterialTheme.colorScheme.background,
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    ) {
+        var pageToLoad by remember { mutableIntStateOf(1) }
+        var toPress by remember { mutableIntStateOf(4) }
+        when (pageToLoad) {
+            1 -> LemonadePage(
                 painterImage = painterResource(id = R.drawable.lemon_tree),
                 imageDesc = stringResource(R.string.lemon_tree),
                 instructions = stringResource(R.string.instructions_1),
@@ -79,17 +103,19 @@ fun LemonadeProducer(modifier: Modifier = Modifier) {
                     toPress = (2..4).random()
                 }
             )
-        2 -> LemonadePage(
+
+            2 -> LemonadePage(
                 painterImage = painterResource(id = R.drawable.lemon_squeeze),
                 imageDesc = stringResource(R.string.lemon),
                 instructions = stringResource(R.string.instructions_2),
                 modifier = modifier,
                 imageOnClick = {
-                    if(toPress == 0) pageToLoad = 3
+                    if (toPress == 0) pageToLoad = 3
                     else toPress--
                 }
             )
-        3 -> LemonadePage(
+
+            3 -> LemonadePage(
                 painterImage = painterResource(id = R.drawable.lemon_drink),
                 imageDesc = stringResource(R.string.lemonade_glass),
                 instructions = stringResource(R.string.instructions_3),
@@ -98,15 +124,17 @@ fun LemonadeProducer(modifier: Modifier = Modifier) {
                     pageToLoad = 4
                 }
             )
-        else -> LemonadePage(
-                    painterImage = painterResource(id = R.drawable.lemon_restart),
-                    imageDesc = stringResource(R.string.empty_glass),
-                    instructions = stringResource(R.string.instructions_4),
-                    modifier = modifier,
-                    imageOnClick = {
-                        pageToLoad = 1
-                    }
-                )
+
+            else -> LemonadePage(
+                painterImage = painterResource(id = R.drawable.lemon_restart),
+                imageDesc = stringResource(R.string.empty_glass),
+                instructions = stringResource(R.string.instructions_4),
+                modifier = modifier,
+                imageOnClick = {
+                    pageToLoad = 1
+                }
+            )
+        }
     }
 }
 
