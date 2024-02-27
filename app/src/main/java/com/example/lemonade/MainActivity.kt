@@ -70,19 +70,6 @@ fun LemonadeApp() {
 }
 
 @Composable
-fun LemonadeBanner(modifier: Modifier = Modifier) {
-    Text(
-        text = "Lemonade",
-        fontWeight = FontWeight.Bold,
-        modifier = modifier
-            .height(60.dp)
-            .fillMaxWidth()
-            .background(color = Color.Yellow)
-
-    )
-}
-
-@Composable
 fun LemonadeProducer(modifier: Modifier = Modifier) {
     Surface(
         color = MaterialTheme.colorScheme.background,
